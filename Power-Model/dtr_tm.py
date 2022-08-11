@@ -65,7 +65,6 @@ Y = df[Y_column].to_numpy().reshape(-1)
 X_train = df_train[X_column].to_numpy()
 Y_train = df_train[Y_column].to_numpy().reshape(-1)
 
-
 regr_dep2 = DecisionTreeRegressor(max_depth=2)
 regr_dep3 = DecisionTreeRegressor(max_depth=3)
 regr_dep4 = DecisionTreeRegressor(max_depth=4)
@@ -108,23 +107,25 @@ for i in range(len(dtrs)):
 	dtr = dtrs[i]
 	label = kernel_label[i]
 	X_test = df_test[X_column]
+
 	Y_test = df_test[Y_column]
 	model = dtr.fit(X_train, Y_train)
 	Y_pred = model.predict(X_test)
 
-	if args["save"]:
-		pkl_filename = args["save"]
-		with open(pkl_filename, 'wb') as file:
-			pickle.dump(model, file)
+	# if args["save"]:
+	# 	pkl_filename = args["save"]
+	# 	with open(pkl_filename, 'wb') as file:
+	# 		pickle.dump(model, file)
 
-	mae = mean_absolute_error(Y_test, Y_pred)
-	mse = mean_squared_error(Y_test, Y_pred)
-	rmse = np.sqrt(mse)
-	r2 = r2_score(Y_test, Y_pred)
-	score = model.score(X_test, Y_test)
-	Y_test = Y_test.to_numpy().reshape(-1)
-	errors = np.abs(Y_test-Y_pred)/Y_test
-	X_Y_errors = np.hstack((X_test, Y_test.reshape(-1,1), Y_pred.reshape(-1,1), errors.reshape(-1,1)))
+	# mae = mean_absolute_error(Y_test, Y_pred)
+	# mse = mean_squared_error(Y_test, Y_pred)
+	# rmse = np.sqrt(mse)
+	# r2 = r2_score(Y_test, Y_pred)
+	# score = model.score(X_test, Y_test)
+	# Y_test = Y_test.to_numpy().reshape(-1)
+	# errors = np.abs(Y_test-Y_pred)/Y_test
+	# X_Y_errors = np.hstack((X_test, Y_test.reshape(-1,1), Y_pred.reshape(-1,1), errors.reshape(-1,1)))
+
 	# print(errors.mean())
 	# print(f"{mae}")
 	# print(f"{rmse}")
@@ -134,3 +135,9 @@ for i in range(len(dtrs)):
 	MAPEs.append(np.abs(scores.mean()))
 
 print(f"MAPE: {min(MAPEs)}")  # mae
+argmin = MAPEs.index(min(MAPEs))
+print(f"argmin_MAPE: {argmin}")
+
+with open("dtr_tm_model.pickle", 'wb') as file:
+	pickle.dump(dtrs[argmin], file)
+

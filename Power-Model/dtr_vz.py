@@ -132,3 +132,8 @@ for i in range(len(dtrs)):
 	MAPEs.append(np.abs(scores.mean()))
 
 print(f"MAPE: {min(MAPEs)}")  # mae
+argmin = MAPEs.index(min(MAPEs))
+print(f"argmin_MAPE: {argmin}")
+
+with open("dtr_vz_mi_model.pickle", 'wb') as file:
+	pickle.dump(dtrs[argmin], file)
